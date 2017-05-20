@@ -1,10 +1,9 @@
 package org.dave.derive.boot;
 
-import com.googlecode.objectify.ObjectifyService;
-
-import org.dave.derive.persistence.entity.Example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.googlecode.objectify.ObjectifyService;
 
 public class Bootstrap {
 
@@ -17,9 +16,6 @@ public class Bootstrap {
     }
 
     private void registerEntities() {
-        log.info("Registering entities...");
-        ObjectifyService.register(Example.class);
-
 
         log.info("Done registering entities.");
     }

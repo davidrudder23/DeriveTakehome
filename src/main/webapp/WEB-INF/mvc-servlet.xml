@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="org.dave.derive.web.controller"/>
+    <context:component-scan base-package="org.dave.derive"/>
     <mvc:annotation-driven/>
 
 </beans>

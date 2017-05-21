@@ -21,13 +21,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.google.appengine.repackaged.com.google.gson.Gson;
+
 @RunWith(SpringRunner.class)
-@ContextConfiguration({"classpath:spring/applicationContext.xml"})
+@ContextConfiguration({ "classpath:spring/applicationContext.xml" })
 @WebAppConfiguration
 public class ItemControllerTest {
 
 	MockMvc mockMvc;
-	
+
 	@InjectMocks
 	ItemController itemController;
 
@@ -36,8 +38,8 @@ public class ItemControllerTest {
 
 	@Before
 	public void setUp() {
-        MockitoAnnotations.initMocks(this);
-		
+		MockitoAnnotations.initMocks(this);
+
 		mockMvc = MockMvcBuilders.standaloneSetup(itemController).build();
 	}
 
@@ -52,28 +54,47 @@ public class ItemControllerTest {
 	@Test
 	public void testGetAll() throws Exception {
 		List<Item> items = new ArrayList<>();
-		
+
 		Item item = getTestItem();
 		items.add(item);
-		
+
 		when(itemService.getAllItems()).thenReturn(items);
-		
-		mockMvc.perform(get("/item"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$[0].description", is("Test Item"))
-		);
+
+		mockMvc.perform(get("/item")).andExpect(status().isOk()).andExpect(jsonPath("$[0].description", is("Test Item")));
 	}
-	
+
 	@Test
 	public void testGetOne() throws Exception {
 		Item item = getTestItem();
-		
+
 		when(itemService.getById(Mockito.anyLong())).thenReturn(item);
-		
-		mockMvc.perform(get("/item/123456"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.description", is("Test Item"))
-		);
+
+		mockMvc.perform(get("/item/123456")).andExpect(status().isOk()).andExpect(jsonPath("$.description", is("Test Item")));
+	}
+
+	@Test
+	public void testInsert() throws Exception {
+		Item item = getTestItem();
+		Gson gson = new Gson();
+		String json = gson.toJson(item);
+
+		mockMvc.perform(post("/item").contentType("application/json").content(json)).andExpect(status().isOk());
+
+		verify(itemService, times(1)).insert(Mockito.any(Item.class));
+
+	}
+
+	@Test
+	public void testUpdate() throws Exception {
+		Item item = getTestItem();
+		item.setDescription("This is an updated description");
+		Gson gson = new Gson();
+		String json = gson.toJson(item);
+
+		mockMvc.perform(put("/item/123456").contentType("application/json").content(json)).andExpect(status().isOk());
+
+		verify(itemService, times(1)).update(Mockito.any(Item.class));
+
 	}
 
 }

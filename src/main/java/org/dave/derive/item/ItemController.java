@@ -34,12 +34,19 @@ public class ItemController {
         return new ResponseEntity<Item>(item, HttpStatus.OK);
     }
 
-    
-    
     @RequestMapping(method={RequestMethod.POST}, value="")
     @ResponseBody
-    public ResponseEntity<Long> InsertItem(@RequestBody Item item) {
+    public ResponseEntity<Long> insert(@RequestBody Item item) {
     	Long id = itemService.insert(item);
+    	
+        return new ResponseEntity<Long>(id, HttpStatus.OK);
+    }
+
+    @RequestMapping(method={RequestMethod.PUT}, value="/{id}")
+    @ResponseBody
+    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody Item item) {
+    	item.setId(id);
+    	id = itemService.update(item);
     	
         return new ResponseEntity<Long>(id, HttpStatus.OK);
     }

@@ -37,7 +37,7 @@ public class PurchaseOrderService {
 		return key.getId();
 	}
 
-	public Long update(PurchaseOrder purchaseOrder) {
+	public Long update(Long itemId, PurchaseOrder purchaseOrder) {
 		PurchaseOrder storedPO = getById(purchaseOrder.getId());
 		if (storedPO == null) {
 			purchaseOrder.setId(null);
@@ -47,7 +47,7 @@ public class PurchaseOrderService {
 		// If the received date is set, but it wasn't set, it means
 		// the PO is being received.  Increment inventory
 		if (purchaseOrder.isReceived() && !storedPO.isReceived()) {
-			Item item = itemService.getById(purchaseOrder.getItem().getId());
+			Item item = itemService.getById(itemId);
 			
 			item.incrementInventory(purchaseOrder.getQuantity());
 			itemService.update(item);
@@ -56,7 +56,7 @@ public class PurchaseOrderService {
 		// Similarly, if the received date is unset, but it was previously set
 		// then the PI is being un-received.  Decrement inventory
 		if (purchaseOrder.isReceived() && !storedPO.isReceived()) {
-			Item item = itemService.getById(purchaseOrder.getItem().getId());
+			Item item = itemService.getById(itemId);
 			
 			item.decrementInventory(purchaseOrder.getQuantity());
 			itemService.update(item);

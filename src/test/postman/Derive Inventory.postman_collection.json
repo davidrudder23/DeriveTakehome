@@ -1,0 +1,186 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Derive Inventory",
+		"_postman_id": "c603cc37-b497-9d58-a75c-257e63a5e387",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Insert Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"postman.setGlobalVariable(\"item_id\", data);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/item",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Baby Turtles\",\n\t\"description\": \"Young turtles, ready for adoption\",\n\t\"price\": 19.99\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get New Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"tests[\"Got a good item id\"] = data.id==postman.getGlobalVariable(\"item_id\");",
+							"tests[\"Inventory should be empty\"] = data.numberInInventory == null;",
+							"tests[\"Price should be set\"] = data.price === 19.99;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/item/{{item_id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Insert Purchase Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"postman.setGlobalVariable(\"purchaseorder_id\", data);",
+							"",
+							"tests[\"Got a purchaseorder id\"] = !isNaN(data);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/item/{{item_id}}/purchaseorder",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"source\": \"Dave's Exotic Reptiles\",\n\t\"quantity\": 100\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get New Purchase Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"tests[\"Got a good id\"] = data.id == postman.getGlobalVariable(\"purchaseorder_id\");",
+							"tests[\"Should not be received\"] = data.received == null;",
+							"tests[\"Got the right qty\"] = data.quantity == 100;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/item/{{item_id}}/purchaseorder/{{purchaseorder_id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receive Purchase Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"",
+							"tests[\"Got a purchaseorder id\"] = !isNaN(data);",
+							"tests[\"Got a goot purchaseorder id\"] = data == postman.getGlobalVariable(\"purchaseorder_id\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/item/{{item_id}}/purchaseorder/{{purchaseorder_id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 6685030696878080,\n  \"source\": \"Dave's Exotic Reptiles\",\n  \"quantity\": 100,\n  \"received\": \"2012-04-23T18:25:43.511Z\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Insert SalesOrder",
+			"request": {
+				"url": "{{base_url}}/salesorder",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"customerName\": \"Magilla Gorilla\",\n\t\"salesOrderLines\": [\n\t\t{\n\t\t\t\"item\": \"Item({{item_id}})\",\n\t\t\t\"quantity\": 2\n\t\t\t\n\t\t}\n\t]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

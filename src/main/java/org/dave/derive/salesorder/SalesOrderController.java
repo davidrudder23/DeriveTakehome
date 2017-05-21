@@ -1,6 +1,5 @@
-package org.dave.derive.purchaseorder;
+package org.dave.derive.salesorder;
 
-import org.dave.derive.item.Item;
 import org.dave.derive.item.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.googlecode.objectify.Key;
-
 @Controller
-@RequestMapping("/item/{itemId}/purchaseorder")
-public class PurchaseOrderController {
+@RequestMapping("/salesorder")
+public class SalesOrderController {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	PurchaseOrderService purchaseOrderService;
+	SalesOrderService salesOrderService;
 
 	@Autowired
 	ItemService itemService;
@@ -30,30 +27,31 @@ public class PurchaseOrderController {
     
     @RequestMapping(method={RequestMethod.GET}, value="/{id}")
     @ResponseBody
-    public ResponseEntity<PurchaseOrder> getById(@PathVariable("itemId") Long itemId, @PathVariable("id") Long id) {
-    	PurchaseOrder po = purchaseOrderService.getById(id);
+    public ResponseEntity<SalesOrder> getById(@PathVariable("id") Long id) {
+    	SalesOrder po = salesOrderService.getById(id);
     	
-        return new ResponseEntity<PurchaseOrder>(po, HttpStatus.OK);
+        return new ResponseEntity<SalesOrder>(po, HttpStatus.OK);
     }
 
     @RequestMapping(method={RequestMethod.POST}, value="")
     @ResponseBody
-    public ResponseEntity<Long> insert(@PathVariable("itemId") Long itemId, @RequestBody PurchaseOrder purchaseOrder) {    	
-    	purchaseOrder.setItem(Key.create(Item.class, itemId));
-    	Long id = purchaseOrderService.insert(purchaseOrder);
+    public ResponseEntity<Long> insert(@RequestBody SalesOrder salesOrder) {    
+    	LOG.error("SalesOrder lines={}", salesOrder.getSalesOrderLines());
+    	//Item item = itemService.getById(itemId);
+    	//purchaseOrder.setItem(Key.create(Item.class, item.getId()));
+    	Long id = salesOrderService.insert(salesOrder);
     	
         return new ResponseEntity<Long>(id, HttpStatus.OK);
     }
     
     @RequestMapping(method={RequestMethod.PUT}, value="/{id}")
     @ResponseBody
-    public ResponseEntity<Long> update(@PathVariable("itemId") Long itemId, @PathVariable("id") Long id, @RequestBody PurchaseOrder purchaseOrder) {
+    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody SalesOrder salesOrder) {
     	
     	// Trust the ID in the path over the ID in the json
     	// We'll need to add authorization, and it's easiest to filter on the URL
-    	purchaseOrder.setItem(Key.create(Item.class, itemId));
-    	purchaseOrder.setId(id);
-    	Long newId = purchaseOrderService.update(itemId, purchaseOrder);
+    	salesOrder.setId(id);
+    	Long newId = salesOrderService.update(salesOrder);
     	
         return new ResponseEntity<Long>(newId, HttpStatus.OK);
     }

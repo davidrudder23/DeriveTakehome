@@ -5,10 +5,11 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.googlecode.objectify.Key;
 
-public class StringToKeyDeserializer extends StdDeserializer<String> {
-
+public class StringToKeyDeserializer extends StdDeserializer<Key<Object>> {
 	/**
 	 * 
 	 */
@@ -25,7 +26,9 @@ public class StringToKeyDeserializer extends StdDeserializer<String> {
     
 
 	@Override
-	public String deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException {
+	public Key<Object> deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException {
+		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+		//String keyString = node.get(")
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,9 +3,11 @@ package org.dave.derive.salesorder;
 import java.util.Date;
 
 import org.dave.derive.boot.KeyToStringSerializer;
+import org.dave.derive.boot.StringToKeyDeserializer;
 import org.dave.derive.item.Item;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
@@ -20,6 +22,7 @@ public class SalesOrderLine {
 	
 	@Parent Key<SalesOrder> salesOrder;
 	
+	@JsonDeserialize(using = StringToKeyDeserializer.class)
 	@JsonSerialize(using=KeyToStringSerializer.class, as=String.class)
 	Key<Item> item;
 	

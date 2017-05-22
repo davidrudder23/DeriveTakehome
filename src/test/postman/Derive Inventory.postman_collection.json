@@ -161,26 +161,6 @@
 				"description": ""
 			},
 			"response": []
-		},
-		{
-			"name": "Insert SalesOrder",
-			"request": {
-				"url": "{{base_url}}/salesorder",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"customerName\": \"Magilla Gorilla\",\n\t\"salesOrderLines\": [\n\t\t{\n\t\t\t\"item\": \"Item({{item_id}})\",\n\t\t\t\"quantity\": 2\n\t\t\t\n\t\t}\n\t]\n}"
-				},
-				"description": ""
-			},
-			"response": []
 		}
 	]
 }
